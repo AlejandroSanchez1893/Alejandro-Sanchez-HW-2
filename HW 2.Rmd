@@ -1,0 +1,84 @@
+---
+title: "HW 2"
+output: html_document
+---
+Alejandro Sanchez
+
+PP1: When we roll a die with the assumption that if we get a 6 it automatically considered unfair means that a die has a probability of (1/6)of being declared unfair and a probability of (5/6)of being declared a fair die.
+
+PP2: This time around we would roll the dice 30 times. I decided to use a chi square test. I chose a 95% confidence level for the test. The 95% confidence level would give us a value of α=.05.  The Alternative Hypothesis would be that the observed values of the 30 rolls of the die do not match the expected values. The Null Hypothesis is that the observed values of the 30 rolls match the expected values. If the P-value derived from the chi square test < α we reject the null hypothesis. 
+
+```{r}
+sims <- sample(x = 1:6, size=30, replace=TRUE)
+table(sims)
+prob <- table(sims) / length(sims)
+```
+```{R}
+chi2 <- chisq.test(table(sims))
+chi2
+```
+In this case we achieved a P-value of .1013 which is > α therefore we fail to reject the null which means we have a fair die. 
+
+PP3: I believe that there is always or should always some level of confidence attached to a conclusion. In this case lets use the 85% level of confidence when we roll 100 times. 
+```{R}
+sims <- sample(x = 1:6, size=100, replace=TRUE)
+table(sims)
+prob <- table(sims) / length(sims)
+```
+```{R}
+chi2 <- chisq.test(table(sims))
+chi2
+```
+
+We once again see that the P-value is again greater than α therefore we once again fail to reject the null and deem the die fair.
+
+I decided to run with the idea that rolling a die 1000 times seems like a reasonable amount of times to determine whether or not a die was fair or not. To start, I had R simulate the dice roll for me. Below are the results of the 1000 rolls.
+
+```{r}
+sims <- sample(x = 1:6, size=1000, replace=TRUE)
+table(sims)
+prob <- table(sims) / length(sims)
+```
+
+To have more of a visual of these results I had R plot them for me.
+```{R}
+plot(table(sims), xlab = 'd6 rolls', ylab = 'Frequency', main = 'Frequency of events for each possible d6 roll (Trials=1000)')
+plot(prob, xlab = 'd6 rolls', ylab = 'Frequency', main = 'Probability of events for each possible d6 roll (Trials=1000)')
+```
+
+After choosing to do 1000 rolls, I needed to decide how I was going to test the fairness of the die, otherwise we would be comparing or seeing how the actual results of the rolls compare to the expected values. I decided upon the Chi Square test for goodness of fit. I chose this test because for a multinomial experiment, the chi-square test for goodness of fit evaluates how "good" the sample distribution and theoretical distribution fit each other. 
+
+For this test the Alternative Hypothesis would be that the observed values of the 1000 rolls of the die do not match the expected values. The Null Hypothesis is that the observed values of the 100 rolls match the expected values. I chose a 95% confidence level which would give me α = .05
+
+```{R}
+chi2 <- chisq.test(table(sims))
+chi2
+```
+
+
+We would reject the null hypothesis if our p-value was smaller than the α which is given by the confidence level. Since I chose a 95% level our α=.05. If we fail to reject the null we can say that with 95% confidence that there is little to no statistical evidence that the values achieved from the 1000 rolls differ from the expected values. Which means we have a fair die on our hands. 
+
+Every time I knit this rmd file it runs both the 1000 rolls again and the chi square test again so as I'm editing this document and re-knit it it is technically rolling another die 1000 times which will give us different P-values every time which would be like testing several dice. However the several times I've ran this I have always gotten a P-Value that is larger than α which means we fail to reject the null.   
+
+I jotted down the results of my first run and analyzed it:
+
+1	2	3	4	5	6
+155	169	159	175	166	176
+					
+position	oberved 	expected 	O-E	(O-E)^2	(O-E)^2/E
+1	155	166.6666667	-11.66666667	136.1111111	0.816666667
+2	169	166.6666667	2.333333333	5.444444444	0.032666667
+3	159	166.6666667	-7.666666667	58.77777778	0.352666667
+4	175	166.6666667	8.333333333	69.44444444	0.416666667
+5	166	166.6666667	-0.666666667	0.444444444	0.002666667
+6	176	166.6666667	9.333333333	87.11111111	0.522666667
+					χ^2=2.144
+
+the critical value for this test would be retrieved from a chi square table looking at df=5 and α=.05. χα^2=11.070
+
+and since χ^2< χα^2 we fail to reject the null which means that the die is a fair die. 
+
+
+
+
+
